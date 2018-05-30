@@ -17,7 +17,7 @@ import java.util.Date;
  * 8/21/17.
  */
 @RestController
-@RequestMapping( "user" )
+@RequestMapping( "gpsApi/v1/users" )
 public class UserController
 {
 
@@ -31,29 +31,29 @@ public class UserController
 
         String jwtToken = "";
 
-        if ( login.getUsername() == null || login.getPassword() == null )
+        if ( login.getDocument() == null || login.getPhoneNumber() == null )
         {
             throw new ServletException( "Please fill in username and password" );
         }
 
-        String username = login.getUsername();
-        String password = login.getPassword();
-
-        User user = userService.findUserByEmail( username );
+        String identificacion = login.getDocument();
+        String phoneNumber = login.getPhoneNumber();
+        System.err.println("Identificación: "+identificacion);
+        User user = userService.findUserByIdentification( identificacion );
 
         if ( user == null )
         {
             throw new ServletException( "User username not found." );
         }
 
-        String pwd = user.getPassword();
-
-        if ( !password.equals( pwd ) )
+        String pwd = user.getPhoneNumber();
+        System.err.println("Phone: "+pwd);
+        if ( !phoneNumber.equals( pwd ) )
         {
             throw new ServletException( "Invalid login. Please check your name and password." );
         }
 
-        jwtToken = Jwts.builder().setSubject( username ).claim( "roles", "user" ).setIssuedAt( new Date() ).signWith(
+        jwtToken = Jwts.builder().setSubject( identificacion ).claim( "roles", "user" ).setIssuedAt( new Date() ).signWith(
             io.jsonwebtoken.SignatureAlgorithm.HS256, "secretkey" ).compact();
 
         return new Token( jwtToken );

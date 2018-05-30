@@ -17,7 +17,7 @@ import java.util.List;
  * 10/31/17.
  */
 @RestController
-@RequestMapping( "api" )
+@RequestMapping( "gpsApi/v1/services" )
 public class TodoController
 {
 
